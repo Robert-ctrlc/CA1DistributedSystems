@@ -2,25 +2,27 @@ package com.example.dit.model;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
-
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement(name= "loan")
+@XmlRootElement(name = "loan")
 @Entity
 public class Loan implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String description;
     private Double loanAmount;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_id")
+    @XmlTransient
     private Student student;
 
-    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Deposit> deposits = new ArrayList<>();
 
 
@@ -30,7 +32,6 @@ public class Loan implements Serializable {
         this.description = description;
         this.loanAmount = loanAmount;
     }
-
 
     public Long getId() {
         return id;
